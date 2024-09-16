@@ -2,10 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 * {
   box-sizing: border-box;
-  
 }
 
 html::-webkit-scrollbar {
@@ -13,7 +12,7 @@ html::-webkit-scrollbar {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   /* background-color: #f2f4f8; */
   margin: 0;
   /*box-sizing: border-box;*/
@@ -47,11 +46,10 @@ button {
   .input,
   .passwordInput,
   .emailInput,
-  .nameInput{
+  .nameInput {
     padding: 0 5rem;
   }
 }
-
 
 .removeIcon {
   cursor: pointer;
@@ -99,7 +97,7 @@ button {
   align-items: center;
 }
 
-.pageContainer{
+.pageContainer {
   /* margin-bottom: 10rem; */
 }
 
@@ -128,12 +126,12 @@ button {
 
 .nameInput {
   margin-bottom: 2rem;
-  background: url('./assets/svg/badgeIcon.svg') #ffffff 2.5% center no-repeat;
+  background: url("./assets/svg/badgeIcon.svg") #ffffff 2.5% center no-repeat;
 }
 
 .emailInput {
   margin-bottom: 2rem;
-  background: url('./assets/svg/personIcon.svg') #fff 2.5% center no-repeat;
+  background: url("./assets/svg/personIcon.svg") #fff 2.5% center no-repeat;
 }
 
 .passwordInputDiv {
@@ -142,7 +140,7 @@ button {
 
 .passwordInput {
   margin-bottom: 2rem;
-  background: url('./assets/svg/lockIcon.svg') #ffffff 2.5% center no-repeat;
+  background: url("./assets/svg/lockIcon.svg") #ffffff 2.5% center no-repeat;
 }
 
 .showPassword {
@@ -169,19 +167,6 @@ button {
   position: inherit;
 }
 
-.signInButton,
-.signUpButton,
-.signInText,
-.signUpText {
-  cursor: pointer;
-}
-@media (min-width: 1024px) {
-  .signInBar,
-  .signUpBar {
-    justify-content: start;
-  }
-}
-
 .signInText,
 .signUpText {
   font-size: 1.2rem;
@@ -195,16 +180,24 @@ button {
   align-items: center;
   width: 3rem;
   height: 3rem;
-  background-color: #6D99ab;
+  background-color: #6d99ab;
   border-radius: 50%;
 }
 @media (min-width: 1024px) {
+  .signInBar,
+  .signUpBar {
+    justify-content: start;
+  }
   .signInButton,
   .signUpButton {
     margin-left: 1.5rem;
   }
 }
 
+.signInButton,
+.signUpButton {
+  cursor: pointer;
+}
 
 .socialIconDiv {
   cursor: pointer;
@@ -218,7 +211,6 @@ button {
   border-radius: 50%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 }
-
 
 .registerLink {
   margin-top: 4rem;
@@ -323,7 +315,6 @@ button {
   font-weight: 500;
   text-align: left;
 }
-
 
 .categoryListings {
   padding: 0;
@@ -451,7 +442,6 @@ button {
   display: inline;
 }
 
-
 .listingDetailsList {
   padding: 0;
   list-style-type: none;
@@ -542,7 +532,7 @@ button {
   cursor: pointer;
   font-size: 1rem;
   padding: 0.25rem 0.75rem;
-  border-radius: 0.50rem;
+  border-radius: 0.5rem;
 }
 
 .profileDetailsHeader {
@@ -604,7 +594,7 @@ button {
 
 .createListing {
   background-color: #ffffff;
-  border-radius: 0.50rem;
+  border-radius: 0.5rem;
   padding: 0.35rem 1rem;
   box-shadow: rgba(0, 0, 0, 0.2);
   margin-top: 2rem;
@@ -644,7 +634,7 @@ button {
   padding: 0.9rem 3rem;
   background-color: #ffffff;
   font-weight: 600;
-  border-radius: 0.50rem;
+  border-radius: 0.5rem;
   font-size: 1rem;
   margin: 0.5rem 0.5rem 0 0;
   display: flex;
@@ -652,7 +642,7 @@ button {
   align-items: center;
 }
 .formButtonActive {
-  background-color: #6D99ab;
+  background-color: #6d99ab;
   color: #ffffff;
 }
 
@@ -706,7 +696,7 @@ button {
   width: 100%;
 }
 .formInputFile::-webkit-file-upload-button {
-  background-color: #6D99ab;
+  background-color: #6d99ab;
   border: none;
   color: #ffffff;
   font-weight: 600;
@@ -738,17 +728,43 @@ button {
   height: 100%;
 }
 
-.swiper-button-next:after, .swiper-button-prev:after{
+.swiper-button-next:after,
+.swiper-button-prev:after {
   color: white;
   background-color: #5e8ea2;
-  border-radius: 6px;
-  padding: 10px 10px 10px 10px;
-  opacity: 0.85;
-  font-size: 40px !important;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 12px 10px;
+  opacity: 0.9;
+  font-size: 24px !important;
 }
 
-@media (max-width: 640px){
-  .swiper-button-next:after, .swiper-button-prev:after{
+@media (max-width: 640px) {
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
     font-size: 35px !important;
+  }
+}
+
+.swiper-pagination-bullet {
+  background-color: #5e8ea2 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #5e8ea2 !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #5e8ea2 !important;
+}
+
+.mySwiper .swiper-slide {
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .mySwiper .swiper-slide > div {
+    flex-direction: column;
   }
 }

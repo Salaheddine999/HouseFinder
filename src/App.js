@@ -1,6 +1,6 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Explore from "./pages/Explore";
 import Offers from "./pages/Offers";
 import Profile from "./pages/Profile";
@@ -22,30 +22,36 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-        <Navbar/>
+        <Navbar />
         <main className="flex flex-col flex-grow min-h-screen desktop:max-w-7xl desktop:mx-auto mx-auto tablet:mx-10 ">
           <Routes>
-          <Route path="/" element={<Explore />}/>
-          <Route path="/profile" element={<PrivateRoute/>}>
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-          <Route path="/offers" element={<Offers />} />
-          <Route path="/category/:categoryName" element={<Category />} />
-          <Route path="/category/:categoryName/:listingId" element={<Listing />} />
-          <Route path="/create-listing" element={<CreateLising />}/>
-          <Route path="/edit-listing/:listingId" element={<EditListing />}/>
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/contact/:landlordId" element={<Contact />} />
-          <Route path="/search/:city/:country/:price/:type" element={<Search />} />
-          <Route path='/notfound' element= {<NotFound/>} />
-          <Route path='/*' element= {<NotFound/>} />
-        </Routes>
+            <Route path="/" element={<Explore />} />
+            <Route path="/profile" element={<PrivateRoute />}>
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route path="/offers" element={<Offers />} />
+            <Route path="/category/:categoryName" element={<Category />} />
+            <Route
+              path="/category/:categoryName/:listingId"
+              element={<Listing />}
+            />
+            <Route path="/create-listing" element={<CreateLising />} />
+            <Route path="/edit-listing/:listingId" element={<EditListing />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/contact/:landlordId" element={<Contact />} />
+            <Route
+              path="/search/:city/:country/:price/:type"
+              element={<Search />}
+            />
+            <Route path="/notfound" element={<NotFound />} />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
         </main>
-        <Footer/>
-      </BrowserRouter> 
-      <ToastContainer/>
+        <Footer />
+      </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }
