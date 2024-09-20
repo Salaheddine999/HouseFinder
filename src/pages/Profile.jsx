@@ -17,7 +17,9 @@ import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { IoLogOutOutline, IoChevronForward } from "react-icons/io5";
-import { BsFillHouseAddFill } from "react-icons/bs";
+import { BsFillHouseAddFill, BsPencilSquare } from "react-icons/bs";
+import { FaTrashAlt, FaBed, FaBath, FaParking, FaCouch } from "react-icons/fa";
+import Spinner from "../components/Spinner";
 import ProfileListing from "../components/ProfileListing";
 
 export default function Profile() {
@@ -37,50 +39,47 @@ export default function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserListings = async () => {
-      const listingsRef = collection(db, "listings");
-      const q = query(
-        listingsRef,
-        where("userRef", "==", auth.currentUser.uid),
-        orderBy("timestamp", "desc"),
-        limit(2)
-      );
-      const querySnap = await getDocs(q);
-
-      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
-      setLastFetchedListing(lastVisible);
-
-      const listings = [];
-
-      querySnap.forEach((doc) => {
-        return listings.push({
-          id: doc.id,
-          data: doc.data(),
-        });
-      });
-      setListings(listings);
-      setLoading(false);
-    };
-
     fetchUserListings();
   }, [auth.currentUser.uid]);
+
+  const fetchUserListings = async () => {
+    const listingsRef = collection(db, "listings");
+    const q = query(
+      listingsRef,
+      where("userRef", "==", auth.currentUser.uid),
+      orderBy("timestamp", "desc"),
+      limit(6)
+    );
+    const querySnap = await getDocs(q);
+
+    const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+    setLastFetchedListing(lastVisible);
+
+    const listings = [];
+
+    querySnap.forEach((doc) => {
+      return listings.push({
+        id: doc.id,
+        data: doc.data(),
+      });
+    });
+    setListings(listings);
+    setLoading(false);
+  };
 
   const onLogout = () => {
     auth.signOut();
     navigate("/sign-in");
-    window.location.reload();
   };
 
   const onSubmit = async () => {
     try {
       if (auth.currentUser.displayName !== name) {
-        // Update display name in firebase
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
       }
 
-      // Update in firestore
       const userRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(userRef, {
         name,
@@ -105,157 +104,152 @@ export default function Profile() {
         (listing) => listing.id !== listingId
       );
       setListings(updatedListings);
-      toast.success("Listing deleted!");
+      toast.success("Listing deleted successfully!");
     }
   };
 
-  const onEdit = (listingId) => {
-    navigate(`/edit-listing/${listingId}`);
-  };
+  const onEdit = (listingId) => navigate(`/edit-listing/${listingId}`);
 
-  // Pagination / Load More
   const onFetchMoreListings = async () => {
     try {
-      // Get reference
       const listingsRef = collection(db, "listings");
-
-      // Create a query
       const q = query(
         listingsRef,
         where("userRef", "==", auth.currentUser.uid),
         orderBy("timestamp", "desc"),
         startAfter(lastFetchedListing),
-        limit(2)
+        limit(6)
       );
-
-      // Execute query
       const querySnap = await getDocs(q);
 
       const lastVisible = querySnap.docs[querySnap.docs.length - 1];
       setLastFetchedListing(lastVisible);
 
-      const listings = [];
+      const newListings = [];
 
       querySnap.forEach((doc) => {
-        return listings.push({
+        return newListings.push({
           id: doc.id,
           data: doc.data(),
         });
       });
 
-      setListings((prevState) => [...prevState, ...listings]);
-      setLoading(false);
+      setListings((prevState) => [...prevState, ...newListings]);
     } catch (error) {
-      toast.error("Could not fetch listings");
+      toast.error("Could not fetch more listings");
     }
   };
 
-  return (
-    <div className="profile mx-4 tablet:mx-0 flex justify-center items-start pt-12 pb-20">
-      <div className="w-full max-w-4xl p-6 space-y-6 bg-white rounded-xl shadow-lg">
-        {/* Header */}
-        <header className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold text-darker">My Profile</h2>
-          <button
-            type="button"
-            className="flex items-center px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700 transition"
-            onClick={onLogout}
-          >
-            <IoLogOutOutline className="w-5 h-5 mr-2" />
-            Logout
-          </button>
-        </header>
+  if (loading) return <Spinner />;
 
-        {/* User Details */}
-        <section className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-xl font-medium">Personal Details</h3>
+  return (
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 tablet:px-6 laptop:px-8 py-12">
+        <div className="bg-white shadow-xl rounded-lg overflow-hidden mb-8">
+          <div className="px-6 py-8 sm:px-8 bg-primary text-white">
+            <div className="flex justify-between items-center">
+              <h2 className="text-3xl font-bold leading-7 sm:text-4xl sm:truncate">
+                My Profile
+              </h2>
+              <button
+                onClick={onLogout}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
+              >
+                <IoLogOutOutline className="-ml-1 mr-2 h-5 w-5" />
+                Logout
+              </button>
+            </div>
+          </div>
+          <div className="px-6 py-8 sm:px-8">
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+              <div className="sm:col-span-1">
+                <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                <dd className="mt-1 text-sm text-gray-900">
+                  <input
+                    type="text"
+                    id="name"
+                    disabled={!changeDetails}
+                    value={name}
+                    onChange={onChange}
+                    className={`w-full px-3 py-2 border rounded-md text-sm ${
+                      changeDetails ? "border-primary" : "border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-primary`}
+                  />
+                </dd>
+              </div>
+              <div className="sm:col-span-1">
+                <dt className="text-sm font-medium text-gray-500">
+                  Email address
+                </dt>
+                <dd className="mt-1 text-sm text-gray-900">
+                  <input
+                    type="email"
+                    id="email"
+                    disabled={true}
+                    value={email}
+                    className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-sm"
+                  />
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div className="px-6 py-4 bg-gray-50 text-right sm:px-8">
             <button
-              type="button"
-              className="text-primary font-semibold"
               onClick={() => {
                 changeDetails && onSubmit();
-                setChangeDetails((prev) => !prev);
+                setChangeDetails((prevState) => !prevState);
               }}
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
-              {changeDetails ? "Done" : "Change"}
+              {changeDetails ? "Save Changes" : "Edit Profile"}
             </button>
           </div>
-          <form className="space-y-3">
-            <input
-              type="text"
-              id="name"
-              disabled={!changeDetails}
-              value={name}
-              onChange={onChange}
-              className={`w-full px-4 py-2 border rounded ${
-                changeDetails ? "border-primary" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-primary`}
-              placeholder="Your Name"
-            />
-            <input
-              type="email"
-              id="email"
-              disabled={!changeDetails}
-              value={email}
-              onChange={onChange}
-              className={`w-full px-4 py-2 border rounded ${
-                changeDetails ? "border-primary" : "border-gray-300"
-              } focus:outline-none focus:ring-2 focus:ring-primary`}
-              placeholder="you@example.com"
-            />
-          </form>
-        </section>
+        </div>
 
-        {/* Create Listing */}
-        <Link
-          to="/create-listing"
-          className="flex items-center justify-center p-4 bg-primary text-white rounded-lg hover:bg-dark transition"
-        >
-          <BsFillHouseAddFill className="w-6 h-6 mr-2" />
-          <span className="font-semibold">Sell or Rent Your Home</span>
-          <IoChevronForward className="w-5 h-5 ml-2" />
-        </Link>
-
-        {/* User Listings */}
-        {!loading && listings?.length > 0 && (
-          <section className="space-y-4">
-            <h3 className="text-2xl font-semibold">Your Listings</h3>
-            <ul className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
-              {listings.map((listing) => (
-                <ProfileListing
-                  key={listing.id}
-                  listing={listing.data}
-                  id={listing.id}
-                  onDelete={() => onDelete(listing.id)}
-                  onEdit={() => onEdit(listing.id)}
-                />
-              ))}
-            </ul>
-            {lastFetchedListing && (
-              <p
-                className="text-center text-primary cursor-pointer hover:underline"
-                onClick={onFetchMoreListings}
+        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+          <div className="px-6 py-8 sm:px-8 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold text-gray-900">My Listings</h3>
+              <Link
+                to="/create-listing"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
-                Load More
-              </p>
-            )}
-          </section>
-        )}
-
-        {/* No Listings Message */}
-        {!loading && listings?.length === 0 && (
-          <div className="text-center text-gray-500">
-            <p>No listings found. Start by creating one!</p>
-            <Link
-              to="/create-listing"
-              className="inline-flex items-center px-4 py-2 mt-2 text-white bg-primary rounded hover:bg-dark transition"
-            >
-              <BsFillHouseAddFill className="w-5 h-5 mr-2" />
-              Create Listing
-            </Link>
+                <BsFillHouseAddFill className="-ml-1 mr-2 h-5 w-5" />
+                Create New Listing
+              </Link>
+            </div>
           </div>
-        )}
+
+          {listings && listings.length > 0 ? (
+            <div className="px-6 py-8 sm:px-8">
+              <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2 laptop:grid-cols-3">
+                {listings.map((listing) => (
+                  <ProfileListing
+                    key={listing.id}
+                    listing={listing.data}
+                    id={listing.id}
+                    onDelete={() => onDelete(listing.id)}
+                    onEdit={() => onEdit(listing.id)}
+                  />
+                ))}
+              </div>
+              {lastFetchedListing && (
+                <div className="mt-8 text-center">
+                  <button
+                    onClick={onFetchMoreListings}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  >
+                    Load More
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 text-sm py-8">
+              No listings found. Create one to get started!
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
