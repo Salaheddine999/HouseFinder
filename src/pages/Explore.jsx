@@ -120,7 +120,7 @@ function Explore() {
         <div className="tablet:relative">
           <div>
             <img
-              src={require("../images/Estately.png")}
+              src={require("../images/Estately.webp")}
               alt=""
               className="tablet:rounded-xl tablet:inline h-[350px] w-full object-cover object-right tablet:h-full"
             />
