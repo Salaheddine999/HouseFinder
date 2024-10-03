@@ -89,7 +89,7 @@ function Footer() {
                   href="tel:+1234567890"
                   className="text-gray-600 hover:text-primary"
                 >
-                  +1 (607) 776-6960
+                  +212 527404090
                 </a>
               </li>
             </ul>
